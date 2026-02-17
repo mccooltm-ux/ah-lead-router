@@ -14,7 +14,7 @@ import {
 export const maxDuration = 60; // allow longer execution for seeding
 
 /**
- * POST /api/demo/seed â populate the database with realistic sample data
+ * POST /api/demo/seed Ã¢ÂÂ populate the database with realistic sample data
  */
 export async function POST(request: NextRequest) {
   try {
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       await prisma.salesRep.deleteMany();
     }
 
-    // ââ 1. Create Sales Reps ââââââââââââââââââââââââââââââââââââââââââââââ
+    // Ã¢ÂÂÃ¢ÂÂ 1. Create Sales Reps Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
     const reps = await Promise.all([
       prisma.salesRep.create({
         data: {
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
 
     const [ted, sarah, marcus, lisa] = reps;
 
-    // ââ 2. Create Territories âââââââââââââââââââââââââââââââââââââââââââââ
+    // Ã¢ÂÂÃ¢ÂÂ 2. Create Territories Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
     const repMap: Record<string, string> = {
       "Ted McCool": ted.id,
       "Sarah Chen": sarah.id,
@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
       )
     );
 
-    // ââ 3. Create Sample Accounts âââââââââââââââââââââââââââââââââââââââââ
+    // Ã¢ÂÂÃ¢ÂÂ 3. Create Sample Accounts Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
     const accountData = [
       // Ted's territory (Midwest)
       { firmName: "Logos Global Management", domain: "logosglobal.com", state: "IL", city: "Chicago", country: "US", repId: ted.id, territory: "Midwest + Canada + West Coast", firmType: "hedge_fund", aum: 3200, products: ["FFTT", "Sankey"], status: "active" },
@@ -128,41 +128,41 @@ export async function POST(request: NextRequest) {
       )
     );
 
-    // ââ 4. Create Sample Leads ââââââââââââââââââââââââââââââââââââââââââââ
+    // Ã¢ÂÂÃ¢ÂÂ 4. Create Sample Leads Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
     const now = new Date();
     const daysAgo = (d: number) => new Date(now.getTime() - d * 86400000);
     const hoursAgo = (h: number) => new Date(now.getTime() - h * 3600000);
 
     const leadData = [
-      // ââ Brand new leads (status: NEW) ââ
+      // Ã¢ÂÂÃ¢ÂÂ Brand new leads (status: NEW) Ã¢ÂÂÃ¢ÂÂ
       { firstName: "James", lastName: "Park", email: "jpark@horizoncap.com", title: "Senior Analyst", firmName: "Horizon Capital Advisors", registrationType: "trial", researchInterest: "sankey", city: "Chicago", state: "IL", country: "US", createdAt: hoursAgo(2) },
       { firstName: "Olivia", lastName: "Chen", email: "ochen@mapleridge.ca", title: "Portfolio Manager", firmName: "Maple Ridge Investments", registrationType: "sample_report", researchInterest: "fftt", city: "Vancouver", state: "BC", country: "CA", createdAt: hoursAgo(5) },
       { firstName: "Hassan", lastName: "Ali", email: "hali@frontierfunds.com", title: "Research Director", firmName: "Frontier Funds", registrationType: "webinar", researchInterest: "lightshed", city: "Phoenix", state: "AZ", country: "US", createdAt: hoursAgo(8) },
       { firstName: "Emma", lastName: "Watson", email: "ewatson@gmail.com", title: "Independent Analyst", firmName: "Watson Research", registrationType: "newsletter", researchInterest: "optimal", createdAt: hoursAgo(1) },
 
-      // ââ Routed leads (recently assigned, awaiting contact) ââ
+      // Ã¢ÂÂÃ¢ÂÂ Routed leads (recently assigned, awaiting contact) Ã¢ÂÂÃ¢ÂÂ
       { firstName: "David", lastName: "Kim", email: "dkim@logosglobal.com", title: "VP Research", firmName: "Logos Global Management", registrationType: "trial", researchInterest: "fftt", city: "Chicago", state: "IL", country: "US", createdAt: daysAgo(2), status: "ROUTED" as const, assignedRepId: ted.id, accountId: accounts.find(a => a.domain === "logosglobal.com")?.id, routedAt: daysAgo(2), territoryMatch: "Midwest + Canada + West Coast", leadScore: 85 },
       { firstName: "Jennifer", lastName: "Nguyen", email: "jnguyen@summitviewpartners.com", title: "Analyst", firmName: "Summit View Partners", registrationType: "sample_report", researchInterest: "optimal", city: "New York", state: "NY", country: "US", createdAt: daysAgo(1), status: "ROUTED" as const, assignedRepId: sarah.id, accountId: accounts.find(a => a.domain === "summitviewpartners.com")?.id, routedAt: daysAgo(1), territoryMatch: "East Coast", leadScore: 78 },
       { firstName: "Michael", lastName: "Brown", email: "mbrown@alpinecap.com", title: "Portfolio Manager", firmName: "Alpine Capital LLC", registrationType: "trial", researchInterest: "glj", city: "Seattle", state: "WA", country: "US", createdAt: daysAgo(3), status: "ROUTED" as const, assignedRepId: ted.id, routedAt: daysAgo(3), territoryMatch: "Midwest + Canada + West Coast", leadScore: 62 },
       { firstName: "Ana", lastName: "Morales", email: "amorales@crescentcap.ca", title: "Senior PM", firmName: "Crescent Capital Group", registrationType: "trial", researchInterest: "schneider", city: "Toronto", state: "ON", country: "CA", createdAt: daysAgo(1), status: "ROUTED" as const, assignedRepId: ted.id, accountId: accounts.find(a => a.domain === "crescentcap.ca")?.id, routedAt: daysAgo(1), territoryMatch: "Midwest + Canada + West Coast", leadScore: 72 },
 
-      // ââ Contacted leads ââ
+      // Ã¢ÂÂÃ¢ÂÂ Contacted leads Ã¢ÂÂÃ¢ÂÂ
       { firstName: "Robert", lastName: "Williams", email: "rwilliams@walleyecapital.com", title: "CIO", firmName: "Walleye Capital", registrationType: "trial", researchInterest: "ironadvisor", city: "Minneapolis", state: "MN", country: "US", createdAt: daysAgo(10), status: "CONTACTED" as const, assignedRepId: ted.id, accountId: accounts.find(a => a.domain === "walleyecapital.com")?.id, routedAt: daysAgo(10), contactedAt: daysAgo(8), territoryMatch: "Midwest + Canada + West Coast", leadScore: 90 },
       { firstName: "Sarah", lastName: "Lee", email: "slee@southernoakcap.com", title: "Analyst", firmName: "Southern Oak Capital", registrationType: "sample_report", researchInterest: "sankey", city: "Miami", state: "FL", country: "US", createdAt: daysAgo(7), status: "CONTACTED" as const, assignedRepId: marcus.id, accountId: accounts.find(a => a.domain === "southernoakcap.com")?.id, routedAt: daysAgo(7), contactedAt: daysAgo(5), territoryMatch: "Southeast", leadScore: 68 },
       { firstName: "Kevin", lastName: "Patel", email: "kpatel@lonestarinvest.com", title: "Research Analyst", firmName: "Lone Star Investments", registrationType: "webinar", researchInterest: "schneider", city: "Dallas", state: "TX", country: "US", createdAt: daysAgo(12), status: "CONTACTED" as const, assignedRepId: lisa.id, accountId: accounts.find(a => a.domain === "lonestarinvest.com")?.id, routedAt: daysAgo(12), contactedAt: daysAgo(9), territoryMatch: "Mountain / Central", leadScore: 75 },
 
-      // ââ Converted leads ââ
+      // Ã¢ÂÂÃ¢ÂÂ Converted leads Ã¢ÂÂÃ¢ÂÂ
       { firstName: "Tom", lastName: "Garcia", email: "tgarcia@bluefincap.com", title: "Managing Partner", firmName: "Bluefin Capital Partners", registrationType: "trial", researchInterest: "lightshed", city: "San Francisco", state: "CA", country: "US", createdAt: daysAgo(30), status: "CONVERTED" as const, assignedRepId: ted.id, accountId: accounts.find(a => a.domain === "bluefincap.com")?.id, routedAt: daysAgo(30), contactedAt: daysAgo(28), convertedAt: daysAgo(15), territoryMatch: "Midwest + Canada + West Coast", leadScore: 82 },
       { firstName: "Michelle", lastName: "Taylor", email: "mtaylor@bostoncap.com", title: "Director of Research", firmName: "Boston Capital Partners", registrationType: "trial", researchInterest: "fermium", city: "Boston", state: "MA", country: "US", createdAt: daysAgo(25), status: "CONVERTED" as const, assignedRepId: sarah.id, accountId: accounts.find(a => a.domain === "bostoncap.com")?.id, routedAt: daysAgo(25), contactedAt: daysAgo(23), convertedAt: daysAgo(14), territoryMatch: "East Coast", leadScore: 76 },
       { firstName: "Chris", lastName: "Anderson", email: "canderson@redrockcap.com", title: "PM", firmName: "Red Rock Capital", registrationType: "sample_report", researchInterest: "glj", city: "Denver", state: "CO", country: "US", createdAt: daysAgo(20), status: "CONVERTED" as const, assignedRepId: lisa.id, accountId: accounts.find(a => a.domain === "redrockcap.com")?.id, routedAt: daysAgo(20), contactedAt: daysAgo(18), convertedAt: daysAgo(10), territoryMatch: "Mountain / Central", leadScore: 70 },
 
-      // ââ Stale leads (routed but no action) ââ
+      // Ã¢ÂÂÃ¢ÂÂ Stale leads (routed but no action) Ã¢ÂÂÃ¢ÂÂ
       { firstName: "Brian", lastName: "Thompson", email: "bthompson@greatlakes.com", title: "Analyst", firmName: "Great Lakes Investment Co", registrationType: "trial", researchInterest: "hjones", city: "Detroit", state: "MI", country: "US", createdAt: daysAgo(12), status: "STALE" as const, assignedRepId: ted.id, routedAt: daysAgo(12), staleAt: daysAgo(5), territoryMatch: "Midwest + Canada + West Coast", leadScore: 55 },
       { firstName: "Rachel", lastName: "Green", email: "rgreen@coastalcap.com", title: "Junior Analyst", firmName: "Coastal Capital", registrationType: "newsletter", researchInterest: "lightshed", city: "Tampa", state: "FL", country: "US", createdAt: daysAgo(15), status: "STALE" as const, assignedRepId: marcus.id, routedAt: daysAgo(15), staleAt: daysAgo(8), territoryMatch: "Southeast", leadScore: 35 },
       { firstName: "Alex", lastName: "Dubois", email: "adubois@quebecfund.ca", title: "Portfolio Manager", firmName: "Quebec Growth Fund", registrationType: "trial", researchInterest: "fftt", city: "Montreal", state: "QC", country: "CA", createdAt: daysAgo(10), status: "STALE" as const, assignedRepId: ted.id, routedAt: daysAgo(10), staleAt: daysAgo(3), territoryMatch: "Midwest + Canada + West Coast", leadScore: 65 },
     ];
 
-    const leads = [];
+    const leads: any[] = [];
     for (const ld of leadData) {
       const { status, assignedRepId, accountId, routedAt, contactedAt, convertedAt, staleAt, leadScore, territoryMatch, ...createData } = ld;
       const lead = await prisma.lead.create({
