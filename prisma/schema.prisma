@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// âââ Sales Representatives âââââââââââââââââââââââââââââââââââââââââââââââââââ
+
+model SalesRep {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  role      String   @default("rep") // rep | manager | admin
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  territories Territory[]
+  leads       Lead[]
+  accounts    Account[]
+}
+
+// âââ Territories âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+
+model Territory {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  regions   String[] // e.g. ["IL","IN","CA"] or ["ON","BC"]
+  country   String   @default("US") // US | CA
+  repId     String?
+  rep       SalesRep? @relation(fields: [repId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// âââ Accounts (existing client firms) ââââââââââââââââââââââââââââââââââââââââ
+
+model Account {
+  id          String   @id @default(cuid())
+  firmName    String
+  domain      String?
+  territory   String?
+  repId       String?
+  rep         SalesRep? @relation(fields: [repId], references: [id])
+  status      String   @default("active") // active | inactive | prospect
+  city        String?
+  state       String?
+  country     String   @default("US")
+  firmType    String?  // hedge_fund | asset_manager | family_office | pension | etc.
+  aum         Float?   // in millions
+  products    String[] // AH product subscriptions
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  leads Lead[]
+}
+
+// âââ Leads âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+
+model Lead {
+  id              String   @id @default(cuid())
+  // Contact info
+  firstName       String
+  lastName        String
+  email           String
+  title           String?
+  phone           String?
+  // Firm info
+  firmName        String
+  firmDomain      String?
+  firmType        String?  // hedge_fund | asset_manager | family_office | etc.
+  aum             Float?
+  city            String?
+  state           String?
+  country         String   @default("US")
+  // Registration info
+  registrationType String  // trial | sample_report | webinar | newsletter | other
+  researchInterest String  // affiliate brand slug: sankey | lightshed | fftt | etc.
+  source           String? // web | referral | event | etc.
+  // Scoring & routing
+  leadScore       Int      @default(0)
+  scoreBreakdown  Json?    // { existingAccount: 20, firmType: 15, ... }
+  status          LeadStatus @default(NEW)
+  // Relationships
+  accountId       String?
+  account         Account?  @relation(fields: [accountId], references: [id])
+  assignedRepId   String?
+  assignedRep     SalesRep? @relation(fields: [assignedRepId], references: [id])
+  territoryMatch  String?   // territory name
+  // Enrichment
+  enrichmentData  Json?
+  enrichedAt      DateTime?
+  // Timestamps
+  routedAt        DateTime?
+  contactedAt     DateTime?
+  convertedAt     DateTime?
+  staleAt         DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  statusChanges LeadStatusChange[]
+  notes         LeadNote[]
+}
+
+enum LeadStatus {
+  NEW
+  ROUTED
+  CONTACTED
+  CONVERTED
+  STALE
+}
+
+// âââ Lead Status History âââââââââââââââââââââââââââââââââââââââââââââââââââââ
+
+model LeadStatusChange {
+  id        String     @id @default(cuid())
+  leadId    String
+  lead      Lead       @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  fromStatus LeadStatus?
+  toStatus  LeadStatus
+  changedBy String?    // rep name or "system"
+  reason    String?
+  createdAt DateTime   @default(now())
+}
+
+// âââ Lead Notes ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+
+model LeadNote {
+  id        String   @id @default(cuid())
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  author    String
+  content   String
+  createdAt DateTime @default(now())
+}
