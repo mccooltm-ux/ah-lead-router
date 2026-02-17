@@ -1,5 +1,6 @@
 # AH Lead Router
 
+
 Automated lead capture, qualification, routing, and conversion tracking for Analyst Hub's affiliate research brands.
 
 ![Next.js](https://img.shields.io/badge/Next.js-14-black) ![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue) ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8) ![Prisma](https://img.shields.io/badge/Prisma-5-2d3748) ![Vercel](https://img.shields.io/badge/Vercel-Ready-000)
@@ -258,7 +259,7 @@ Scoring is configured in `src/lib/services/scoringService.ts`. Default weights:
 | Territory Match | Has matching territory: 15, No match: 5 | 5â15 |
 
 **Max score: 100**. Labels: Hot (75+), Warm (50â74), Cool (25â49), Cold (0â24).
-
+ 
 ---
 
 ## Environment Variables
