@@ -15,6 +15,15 @@ const navItems = [
     ),
   },
   {
+    label: "Lead Pipeline",
+    href: "/pipeline",
+    icon: (
+      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 4.5h14.25M3 9h9.75M3 13.5h9.75m4.5-4.5v12m0 0-3.75-3.75M17.25 21l3.75-3.75" />
+      </svg>
+    ),
+  },
+  {
     label: "Lead Queue",
     href: "/leads",
     icon: (
@@ -57,6 +66,7 @@ export function Sidebar() {
             item.href === "/"
               ? pathname === "/"
               : pathname.startsWith(item.href);
+
           return (
             <Link
               key={item.href}
@@ -77,7 +87,7 @@ export function Sidebar() {
 
       {/* Footer */}
       <div className="border-t border-slate-700 px-4 py-3">
-        <p className="text-xs text-slate-500">v1.0 â¢ Demo Mode</p>
+        <p className="text-xs text-slate-500">v1.0 &bull; Demo Mode</p>
       </div>
     </aside>
   );
