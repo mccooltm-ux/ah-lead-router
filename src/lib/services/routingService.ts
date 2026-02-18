@@ -294,8 +294,9 @@ export async function processNewLead(leadId: string): Promise<void> {
           leadScore: scoreBreakdown.total,
           scoreBreakdown: scoreBreakdown as unknown as Prisma.InputJsonValue,
           researchInterest: brandSlug,
-          enrichmentData:
-            enrichmentData as unknown as Prisma.InputJsonValue | null,
+          enrichmentData: enrichmentData
+            ? (enrichmentData as unknown as Prisma.InputJsonValue)
+            : Prisma.DbNull,
           enrichedAt: enrichmentData ? now : null,
           status: assignedRep ? "ROUTED" : "NEW",
           routedAt: assignedRep ? now : null,
