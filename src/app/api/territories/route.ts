@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
-// GET /api/territories â list all territories with reps
+export const dynamic = "force-dynamic";
+
+// GET /api/territories — list all territories with reps
 export async function GET() {
   try {
     const territories = await prisma.territory.findMany({
@@ -21,7 +23,7 @@ export async function GET() {
   }
 }
 
-// PUT /api/territories â update territory-rep assignment
+// PUT /api/territories — update territory-rep assignment
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
