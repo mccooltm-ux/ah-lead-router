@@ -21,6 +21,7 @@ import { getNotificationClient } from "@/lib/clients/notificationClient";
 import { scoreLead } from "./scoringService";
 import { matchBrand, getBrandLabel } from "@/lib/config/brands";
 import type { Lead, Account, SalesRep } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 // âââ Domain Extraction ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
@@ -291,10 +292,10 @@ export async function processNewLead(leadId: string): Promise<void> {
           assignedRepId: assignedRep?.id || null,
           territoryMatch: territoryName,
           leadScore: scoreBreakdown.total,
-          scoreBreakdown: scoreBreakdown as unknown as Record<string, unknown>,
+          scoreBreakdown: scoreBreakdown as unknown as Prisma.InputJsonValue,
           researchInterest: brandSlug,
           enrichmentData:
-            enrichmentData as unknown as Record<string, unknown> | null,
+            enrichmentData as unknown as Prisma.InputJsonValue | null,
           enrichedAt: enrichmentData ? now : null,
           status: assignedRep ? "ROUTED" : "NEW",
           routedAt: assignedRep ? now : null,
