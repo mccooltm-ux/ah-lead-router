@@ -1,12 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // FIX: TypeScript and ESLint errors are now checked during build.
+  // Previously both were set to `true` which silently hid bugs.
+  //
+  // If you have TS errors that need fixing first, address them —
+  // don't hide them. Each suppressed error is a potential runtime crash.
   typescript: {
-    // Skip type checking during build - types are checked in dev/CI
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   eslint: {
-    // Skip ESLint during build
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   experimental: {},
 };

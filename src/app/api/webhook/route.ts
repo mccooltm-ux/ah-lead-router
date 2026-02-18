@@ -1,63 +1,68 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createLead } from "@/lib/services/leadService";
 import { processNewLead } from "@/lib/services/routingService";
+import {
+  verifyAuth,
+  validateWebhookPayload,
+  checkRateLimit,
+} from "@/lib/middleware/auth";
 
 /**
- * POST /api/webhook â receive real-time lead registration webhooks
+ * POST /api/webhook — receive real-time lead registration webhooks
  *
- * Expected payload:
- * {
- *   "firstName": "John",
- *   "lastName": "Smith",
- *   "email": "jsmith@hedgefund.com",
- *   "title": "Portfolio Manager",
- *   "firmName": "Big Alpha Capital",
- *   "registrationType": "trial",
- *   "researchInterest": "sankey",
- *   "source": "web"
- * }
+ * FIXES APPLIED:
+ * - Auth is now MANDATORY (not opt-in)
+ * - Input validation with email format check
+ * - Rate limiting (30 req/min per IP)
+ * - String length limits to prevent abuse
+ * - Duplicate detection by email
  */
 export async function POST(request: NextRequest) {
   try {
-    // Verify webhook secret (optional, for production)
-    const authHeader = request.headers.get("authorization");
-    const expectedSecret = process.env.CRON_SECRET;
-    if (expectedSecret && authHeader !== `Bearer ${expectedSecret}`) {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
+    // ── Rate limit check ──────────────────────────────────────────────
+    const rateLimitError = checkRateLimit(request);
+    if (rateLimitError) return rateLimitError;
 
-    const body = await request.json();
+    // ── Auth check (MANDATORY) ────────────────────────────────────────
+    const authError = verifyAuth(request);
+    if (authError) return authError;
 
-    // Validate required fields
-    if (!body.firstName || !body.lastName || !body.email || !body.firmName) {
+    // ── Parse & validate ──────────────────────────────────────────────
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
       return NextResponse.json(
-        {
-          success: false,
-          error: "Missing required fields: firstName, lastName, email, firmName",
-        },
+        { success: false, error: "Invalid JSON body" },
         { status: 400 }
       );
     }
 
+    const [payload, validationError] = validateWebhookPayload(body);
+    if (!payload) {
+      return NextResponse.json(
+        { success: false, error: validationError },
+        { status: 400 }
+      );
+    }
+
+    // ── Create lead ───────────────────────────────────────────────────
     const lead = await createLead({
-      firstName: body.firstName,
-      lastName: body.lastName,
-      email: body.email,
-      title: body.title,
-      phone: body.phone,
-      firmName: body.firmName,
-      registrationType: body.registrationType || "other",
-      researchInterest: body.researchInterest || "unknown",
-      source: body.source || "webhook",
-      city: body.city,
-      state: body.state,
-      country: body.country,
+      firstName: payload.firstName,
+      lastName: payload.lastName,
+      email: payload.email,
+      title: payload.title,
+      phone: payload.phone,
+      firmName: payload.firmName,
+      registrationType: payload.registrationType || "other",
+      researchInterest: payload.researchInterest || "unknown",
+      source: payload.source || "webhook",
+      city: payload.city,
+      state: payload.state,
+      country: payload.country,
     });
 
-    // Process in background
+    // Process in background (fire-and-forget)
     processNewLead(lead.id).catch((err) =>
       console.error(`[Webhook] Processing failed for lead ${lead.id}:`, err)
     );
