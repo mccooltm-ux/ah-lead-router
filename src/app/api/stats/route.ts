@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { getDashboardStats, getConversionMetrics } from "@/lib/services/conversionService";
 
-// GET /api/stats â dashboard statistics
+export const dynamic = "force-dynamic";
+
+// GET /api/stats — dashboard statistics
 export async function GET() {
   try {
     const [stats, metrics] = await Promise.all([
