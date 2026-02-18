@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
-// GET /api/reps â list all sales reps
+export const dynamic = "force-dynamic";
+
+// GET /api/reps — list all sales reps
 export async function GET() {
   try {
     const reps = await prisma.salesRep.findMany({
