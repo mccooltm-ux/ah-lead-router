@@ -1,24 +1,30 @@
 import { NextResponse } from "next/server";
-import { getDashboardStats, getConversionMetrics } from "@/lib/services/conversionService";
+import { leadRepo } from "@/lib/db";
+import { ensureSeeded } from "@/lib/auto-seed";
 
-export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
-// GET /api/stats — dashboard statistics
 export async function GET() {
   try {
-    const [stats, metrics] = await Promise.all([
-      getDashboardStats(),
-      getConversionMetrics(),
-    ]);
+    // Ensure demo data is seeded on first request
+    await ensureSeeded();
 
-    return NextResponse.json({
-      success: true,
-      data: { ...stats, conversionMetrics: metrics },
-    });
-  } catch (error) {
-    console.error("[API] GET /api/stats error:", error);
+    const stats = leadRepo.getStats();
+
     return NextResponse.json(
-      { success: false, error: "Failed to fetch stats" },
+      {
+        success: true,
+        data: stats,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error fetching stats:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Failed to fetch stats",
+      },
       { status: 500 }
     );
   }
