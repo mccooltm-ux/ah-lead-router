@@ -1,27 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getLeads, createLead } from "@/lib/services/leadService";
-import { processNewLead } from "@/lib/services/routingService";
-import type { LeadStatus } from "@prisma/client";
+import { leadRepo } from "@/lib/db";
+import { ensureSeeded } from "@/lib/auto-seed";
+import type { LeadFilters } from "@/types";
 
-// GET /api/leads â list leads with filters
+export const runtime = "nodejs";
+
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const result = await getLeads({
-      status: (searchParams.get("status") as LeadStatus) || undefined,
-      researchInterest: searchParams.get("brand") || undefined,
-      territoryMatch: searchParams.get("territory") || undefined,
-      assignedRepId: searchParams.get("repId") || undefined,
-      search: searchParams.get("search") || undefined,
-      sortBy: searchParams.get("sortBy") || undefined,
-      sortDir: (searchParams.get("sortDir") as "asc" | "desc") || undefined,
-      page: searchParams.get("page") ? parseInt(searchParams.get("page")!) : undefined,
-      pageSize: searchParams.get("pageSize") ? parseInt(searchParams.get("pageSize")!) : undefined,
-    });
+    await ensureSeeded();
 
-    return NextResponse.json({ success: true, data: result });
+    const searchParams = request.nextUrl.searchParams;
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "25");
+    const search = searchParams.get("search") || "";
+    const statusParam = searchParams.get("status");
+    const franchiseParam = searchParams.get("franchise");
+    const tierParam = searchParams.get("tier");
+
+    const filters: LeadFilters = {
+      page,
+      limit,
+      search: search || undefined,
+      status: statusParam ? (statusParam.split(",") as any[]) : undefined,
+      franchise: franchiseParam ? franchiseParam.split(",") : undefined,
+      tier: tierParam ? tierParam.split(",") : undefined,
+    };
+
+    const result = leadRepo.getFiltered(filters);
+
+    return NextResponse.json({ success: true, data: result }, { status: 200 });
   } catch (error) {
-    console.error("[API] GET /api/leads error:", error);
+    console.error("Error fetching leads:", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch leads" },
       { status: 500 }
@@ -29,37 +38,33 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/leads â create a new lead and process it
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const lead = await createLead({
-      firstName: body.firstName,
-      lastName: body.lastName,
+    if (!body.name || !body.email) {
+      return NextResponse.json(
+        { success: false, error: "Missing required fields: name, email" },
+        { status: 400 }
+      );
+    }
+
+    const newLead = leadRepo.create({
+      name: body.name,
       email: body.email,
-      title: body.title,
-      phone: body.phone,
-      firmName: body.firmName,
-      registrationType: body.registrationType || "other",
-      researchInterest: body.researchInterest || "unknown",
-      source: body.source,
-      city: body.city,
-      state: body.state,
-      country: body.country,
+      title: body.title || "",
+      firm: body.firm || "",
+      phone: body.phone || null,
+      source: body.source || "manual",
+      status: body.status || "new",
+      franchise: body.franchise || null,
+      tier: body.tier || null,
+      notes: body.notes || null,
     });
 
-    // Process the lead asynchronously (enrich, score, route)
-    processNewLead(lead.id).catch((err) =>
-      console.error(`[API] Background processing failed for lead ${lead.id}:`, err)
-    );
-
-    return NextResponse.json(
-      { success: true, data: lead, message: "Lead created and processing started" },
-      { status: 201 }
-    );
+    return NextResponse.json({ success: true, data: newLead }, { status: 201 });
   } catch (error) {
-    console.error("[API] POST /api/leads error:", error);
+    console.error("Error creating lead:", error);
     return NextResponse.json(
       { success: false, error: "Failed to create lead" },
       { status: 500 }
